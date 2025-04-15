@@ -65,6 +65,14 @@ const NavBar = () => {
             >
               Form
             </Button>
+            {/* 🔥 NUOVO BOTTONE DASHBOARD */}
+            <Button
+              onClick={() => navigate({ to: '/private/dashboard' })}
+              variant="text"
+              color="inherit"
+            >
+              Dashboard
+            </Button>
           </Stack>
           <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
             {theme.palette.mode === 'dark' ? (

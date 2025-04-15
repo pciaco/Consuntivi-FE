@@ -18,6 +18,7 @@ import { Route as PublicIndexImport } from './routes/public/index'
 import { Route as PrivateIndexImport } from './routes/private/index'
 import { Route as PrivateUsersImport } from './routes/private/users'
 import { Route as PrivateFormImport } from './routes/private/form'
+import { Route as PrivateDashboardImport } from './routes/private/dashboard'
 
 // Create/Update Routes
 
@@ -63,6 +64,12 @@ const PrivateFormRoute = PrivateFormImport.update({
   getParentRoute: () => PrivateRoute,
 } as any)
 
+const PrivateDashboardRoute = PrivateDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PrivateRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -87,6 +94,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/public'
       preLoaderRoute: typeof PublicImport
       parentRoute: typeof rootRoute
+    }
+    '/private/dashboard': {
+      id: '/private/dashboard'
+      path: '/dashboard'
+      fullPath: '/private/dashboard'
+      preLoaderRoute: typeof PrivateDashboardImport
+      parentRoute: typeof PrivateImport
     }
     '/private/form': {
       id: '/private/form'
@@ -122,12 +136,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface PrivateRouteChildren {
+  PrivateDashboardRoute: typeof PrivateDashboardRoute
   PrivateFormRoute: typeof PrivateFormRoute
   PrivateUsersRoute: typeof PrivateUsersRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
+  PrivateDashboardRoute: PrivateDashboardRoute,
   PrivateFormRoute: PrivateFormRoute,
   PrivateUsersRoute: PrivateUsersRoute,
   PrivateIndexRoute: PrivateIndexRoute,
@@ -151,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/private': typeof PrivateRouteWithChildren
   '/public': typeof PublicRouteWithChildren
+  '/private/dashboard': typeof PrivateDashboardRoute
   '/private/form': typeof PrivateFormRoute
   '/private/users': typeof PrivateUsersRoute
   '/private/': typeof PrivateIndexRoute
@@ -159,6 +176,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/private/dashboard': typeof PrivateDashboardRoute
   '/private/form': typeof PrivateFormRoute
   '/private/users': typeof PrivateUsersRoute
   '/private': typeof PrivateIndexRoute
@@ -170,6 +188,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/private': typeof PrivateRouteWithChildren
   '/public': typeof PublicRouteWithChildren
+  '/private/dashboard': typeof PrivateDashboardRoute
   '/private/form': typeof PrivateFormRoute
   '/private/users': typeof PrivateUsersRoute
   '/private/': typeof PrivateIndexRoute
@@ -182,17 +201,25 @@ export interface FileRouteTypes {
     | '/'
     | '/private'
     | '/public'
+    | '/private/dashboard'
     | '/private/form'
     | '/private/users'
     | '/private/'
     | '/public/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/private/form' | '/private/users' | '/private' | '/public'
+  to:
+    | '/'
+    | '/private/dashboard'
+    | '/private/form'
+    | '/private/users'
+    | '/private'
+    | '/public'
   id:
     | '__root__'
     | '/'
     | '/private'
     | '/public'
+    | '/private/dashboard'
     | '/private/form'
     | '/private/users'
     | '/private/'
@@ -233,6 +260,7 @@ export const routeTree = rootRoute
     "/private": {
       "filePath": "private.tsx",
       "children": [
+        "/private/dashboard",
         "/private/form",
         "/private/users",
         "/private/"
@@ -243,6 +271,10 @@ export const routeTree = rootRoute
       "children": [
         "/public/"
       ]
+    },
+    "/private/dashboard": {
+      "filePath": "private/dashboard.tsx",
+      "parent": "/private"
     },
     "/private/form": {
       "filePath": "private/form.tsx",
